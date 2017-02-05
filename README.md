@@ -5,18 +5,21 @@ ImageLoader Class for Network Training
 
 To create a class capable of loading test and training data.
 
-Folder Layout:
+#Folder Layout:
 
-Broad description of folder layouts for all projects
+To use this class, data must be stored in a folder containing the following subfolders:
 
-.../path/testdata/x/		Folder containing all raw data for testing
-.../path/testdata/y/		Folder containing all testing truth values
-.../path/traindata/x/		Folder containing all raw data for training
-.../path/traindata/y/		Folder containing all training truth values
+`testdata/x/`: Folder containing all raw data for testing
+
+`testdata/y/`: Folder containing all testing truth values
+
+`traindata/x/`: Folder containing all raw data for training
+
+`traindata/y/`: Folder containing all training truth values
 
 #Class:
 
-ImageLoader
+`ImageLoader`
 
 #Usage: 
 
