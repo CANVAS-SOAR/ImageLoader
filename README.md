@@ -1,9 +1,7 @@
 # ImageLoader
-ImageLoader class for network training
+ImageLoader Class for Network Training
 
-Data Parsing Design Layout
-
-Goal:
+#Goal:
 
 To create a class capable of loading test and training data.
 
@@ -16,36 +14,31 @@ Broad description of folder layouts for all projects
 .../path/traindata/x/		Folder containing all raw data for training
 .../path/traindata/y/		Folder containing all training truth values
 
-Class:
+#Class:
 
 ImageLoader
 
-Usage: 
+#Usage: 
 
-from imageloader import ImageLoader
-	
-Structure:
+`from ImageLoader import ImageLoader`
 
-loader = ImageLoader(path);
+#Member Variables:
 
-Member Variables:
+`trainX`: Matrix of training data
+`trainY`: Matrix of training ground truth data
+`TestX`: Matrix of test data
+`TestY`: Matrix of test ground truth data
 
-trainX //Matrix of training data
-trainY //Matrix of training ground truth
-TestX //Matrix of test data
-TestY //Matrix of 
+#Methods:
 
-Methods:
+`__init__()`: Default constructor
 
-ImageLoader() //Default constructor
-ImageLoader(path) //Constructor that also sets path
+`setPath(path)`: Sets path that user is working from, user current working directory
 
-setPath(path)	// set path that user is working from, user current working directory
+`loadTrainData()`: Loads training data from `./traindata/` and fills numpy matrices accessible by `getNextBatch()`
 
-loadTrainData() //Load data from path fill numpy matrices accessible by getNextBatch()
+`loadTestData()`: Loads test data from `./testdata/` and fills numpy matrices accessible by `getTestData()`
 
-loadTestData()  // store test data in numpy matrices
+`getNextBatch(size, rand=False)`: Returns batch of `size` training examples. Randomized if `rand` is `True`
 
-batch_x, batch_y = getNextBatch(rand=False)      // Functionality of getting random or sequential
-
-X, Y = getTestData() 		// return x and y test data matrices
+`getTestData()`: Returns test data matrices
