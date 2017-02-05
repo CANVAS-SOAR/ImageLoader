@@ -28,8 +28,11 @@ To use this class, data must be stored in a folder containing the following subf
 #Member Variables:
 
 `trainX`: Matrix of training data
+
 `trainY`: Matrix of training ground truth data
+
 `TestX`: Matrix of test data
+
 `TestY`: Matrix of test ground truth data
 
 #Methods:
