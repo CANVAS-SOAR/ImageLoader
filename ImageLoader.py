@@ -12,10 +12,9 @@ class ImageLoader:
     # @param trainYPath     Path to training data labels
     # @param testXPath      Path to test data
     # @param testYPath      Path to test data labels
-    def __init__(self, path=None, trainXPath="./traindata/x/", trainYPath="./traindata/y/", testXPath="./testdata/x/", testYPath="./testdata/y/"):
-        if path is not None:
-            self.setPath(path)
+    def __init__(self, imageSize=(1392,512), trainXPath="./traindata/x/", trainYPath="./traindata/y/", testXPath="./testdata/x/", testYPath="./testdata/y/"):
 
+        self.imageSize = imageSize
         self.trainXPath = trainXPath
         self.trainYPath = trainYPath
         
@@ -33,17 +32,17 @@ class ImageLoader:
     # @brief                Loads training data
     def loadTrainData(self):
         if os.path.isdir(self.trainXPath):
-            self.trainX = loadImagesFromDir(self.trainXPath)
+            self.trainX = loadImagesFromDir(self.imageSize, self.trainXPath)
 
         if os.path.isdir(self.trainYPath):
-            self.trainY = loadImagesFromDir(self.trainYPath)
+            self.trainY = loadImagesFromDir(self.imageSize, self.trainYPath)
 
     # @brief                Loads test data
     def loadTestData(self):
         if os.path.isdir(self.testXPath):
-            self.testX = loadImagesFromDir(self.testXPath)
+            self.testX = loadImagesFromDir(self.imageSize, self.testXPath)
         if os.path.isdir(self.testYPath):
-            self.testY = loadImagesFromDir(self.testYPath)
+            self.testY = loadImagesFromDir(self.imageSize, self.testYPath)
 
     # @brief                Returns a batch of size training samples
     #
@@ -72,8 +71,9 @@ class ImageLoader:
         return self.testX, self.testY
 
 
-# @brief                Sets working directory to path
 
+# @brief                Sets working directory to path
+#
 # @param path           Path to become new working directory
 def setPath(self, path):
     if os.path.isdir(path):
@@ -82,11 +82,9 @@ def setPath(self, path):
 # @brief                Loads all images from a given directory
 # 
 # @param path           Path from which to load images
-def loadImagesFromDir(path="./"):
+def loadImagesFromDir(imageSize, path="./"):
     data = None
     if os.path.isdir(path):
         files = [f for f in os.listdir(path) if os.path.isfile(os.path.join(path, f))]
-        #Creates a np.list of 3D arrays
-        #TODO: np.stack([...],0) will create 4D array if images are all of same size
-        data = np.array([np.array(Image.open(os.path.join(path,f))) for f in files])
+        data = np.stack([np.array(Image.open(os.path.join(path,f)).resize(imageSize, Image.NEAREST)) for f in files])
     return data
