@@ -1,25 +1,26 @@
 import numpy as np
 import os
 from PIL import Image
+from glob import glob
 
 # @brief Class to load images for network training
 
 class ImageLoader:
-    # @brief                ImageLoader constructor
+    # @brief                   ImageLoader constructor
     # 
-    # @param path           Path to use as working directory
-    # @param trainXPath     Path to raw training data
-    # @param trainYPath     Path to training data labels
-    # @param testXPath      Path to test data
-    # @param testYPath      Path to test data labels
-    def __init__(self, imageSize=(1392,512), trainXPath="./traindata/x/", trainYPath="./traindata/y/", testXPath="./testdata/x/", testYPath="./testdata/y/"):
+    # @param path              Path to use as working directory
+    # @param trainXPattern     Pattern matching training data
+    # @param trainYPattern     Pattern matching training data labels
+    # @param testXPattern      Pattern matching test data
+    # @param testYPattern      Pattern matching test data labels
+    def __init__(self, imageSize=(1392,512), trainXPattern="./traindata/x/*", trainYPattern="./traindata/y/*", testXPattern="./testdata/x/*", testYPattern="./testdata/y/*"):
 
         self.imageSize = imageSize
-        self.trainXPath = trainXPath
-        self.trainYPath = trainYPath
+        self.trainXPattern = trainXPattern
+        self.trainYPattern = trainYPattern
         
-        self.testXPath = testXPath
-        self.testYPath = testYPath
+        self.testXPattern = testXPattern
+        self.testYPattern = testYPattern
 
         self.trainX = None
         self.trainY = None
@@ -31,18 +32,13 @@ class ImageLoader:
 
     # @brief                Loads training data
     def loadTrainData(self):
-        if os.path.isdir(self.trainXPath):
-            self.trainX = loadImagesFromDir(self.imageSize, self.trainXPath)
-
-        if os.path.isdir(self.trainYPath):
-            self.trainY = loadImagesFromDir(self.imageSize, self.trainYPath)
+        self.trainX = loadImagesFromPattern(self.imageSize, self.trainXPattern)
+        self.trainY = loadImagesFromPattern(self.imageSize, self.trainYPattern)
 
     # @brief                Loads test data
     def loadTestData(self):
-        if os.path.isdir(self.testXPath):
-            self.testX = loadImagesFromDir(self.imageSize, self.testXPath)
-        if os.path.isdir(self.testYPath):
-            self.testY = loadImagesFromDir(self.imageSize, self.testYPath)
+        self.testX = loadImagesFromPattern(self.imageSize, self.testXPattern)
+        self.testY = loadImagesFromPattern(self.imageSize, self.testYPattern)
 
     # @brief                Returns a batch of size training samples
     #
@@ -79,12 +75,21 @@ def setPath(self, path):
     if os.path.isdir(path):
         os.chdir(path)
 
+# @brief                Loads all images that match a pattern, relative to current working directory
+# 
+# @param imageSize      images will be resized to this size
+# @param pattern        List of patterns to match filenames
+def loadImagesFromPattern(imageSize, pattern="./*"):
+    data = None
+    files = glob(pattern)
+    data = np.stack([np.array(Image.open(f).resize(imageSize, Image.NEAREST)) for f in files])
+    return data
+
 # @brief                Loads all images from a given directory
 # 
-# @param path           Path from which to load images
-def loadImagesFromDir(imageSize, path="./"):
-    data = None
-    if os.path.isdir(path):
-        files = [f for f in os.listdir(path) if os.path.isfile(os.path.join(path, f))]
-        data = np.stack([np.array(Image.open(os.path.join(path,f)).resize(imageSize, Image.NEAREST)) for f in files])
-    return data
+# @param imageSize      Images will be resized to this size
+# @param directory      Directory to load from
+def loadImagesFromDir(imageSize, directory="./"):
+    if(directory[-1] != "/"):
+        directory = directory + "/"
+    return loadImagesFromPattern(imageSize, directory+"*")
