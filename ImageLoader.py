@@ -131,3 +131,12 @@ def loadImagesFromDir(imageSize, directory="./"):
     if(directory[-1] != "/"):
         directory = directory + "/"
     return loadImagesFromPattern(imageSize, directory+"*")
+
+# @brief                Utility function that converts images to matrix of one-hot vectors
+#
+# @param images
+# @param numClasses     Number of classes/length of one-hot vector
+def oneHot(images, numClasses=None):
+    if(numClasses is None):
+        numClasses = images.max()
+    return np.stack([(np.arange(numClasses) == x[:,:,None]-1).astype(int) for x in images])
