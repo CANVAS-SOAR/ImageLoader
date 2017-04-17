@@ -98,7 +98,7 @@ class ImageLoader:
 # @brief                Sets working directory to path
 #
 # @param path           Path to become new working directory
-def setPath(self, path):
+def setPath(path):
     if os.path.isdir(path):
         os.chdir(path)
 
