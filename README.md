@@ -1,50 +1,50 @@
 # ImageLoader
 ImageLoader Class for Network Training
 
-#Goal:
+# Goal:
 
 To create a class capable of loading test and training data.
 
-#Folder Layout:
+# Setup:
 
-To use this class, data must be stored in a folder containing the following subfolders:
+`pip3 install -r requirements.txt`
 
-`testdata/x/`: Folder containing all raw data for testing
-
-`testdata/y/`: Folder containing all testing truth values
-
-`traindata/x/`: Folder containing all raw data for training
-
-`traindata/y/`: Folder containing all training truth values
-
-#Class:
-
-`ImageLoader`
-
-#Usage: 
+# Usage: 
 
 `from ImageLoader import ImageLoader`
 
-#Member Variables:
+# Methods:
 
-`trainX`: Matrix of training data
+`__init__(self, imageSize=None, trainXPattern="./traindata/x/*", trainYPattern="./traindata/y/*", testXPattern="./testdata/x/*", testYPattern="./testdata/y/*", cached=False)` : ImageLoader constructor
 
-`trainY`: Matrix of training ground truth data
+All parameters are optional, and are understood as follows:
 
-`TestX`: Matrix of test data
+`imageSize`: (width, height) tuple specifying the desired image dimensions. Images will be resized to these dimensions. If None, images will not be resized.
 
-`TestY`: Matrix of test ground truth data
+`trainXPattern`: Pattern matching training data. For example, the value `"./traindata/x/*.png"` will select all files ending with `.png` within the folder `./traindata/x/`
 
-#Methods:
+`trainYPattern`: Pattern matching training data label images
 
-`__init__()`: Default constructor
+`testXPattern`: Pattern matching test data
 
-`setPath(path)`: Sets path that user is working from, user current working directory
+`testYPattern`: Pattern matching test data labels
 
-`loadTrainData()`: Loads training data from `./traindata/` and fills numpy matrices accessible by `getNextBatch()`
+`Cached`: Boolean value, whether to load all images at once. For small datasets, it may be beneficial to set this to `True`. For large datasets, setting this to `False` will conserve memory.
 
-`loadTestData()`: Loads test data from `./testdata/` and fills numpy matrices accessible by `getTestData()`
+`loadTrainData()`: Loads training data from specified patterns. After this function is called, data will be available via `getNextBatch()`
+
+`loadTestData()`: Loads test data from specified patterns. After this function is called, data will be available via `getTestData()`
 
 `getNextBatch(size, rand=False)`: Returns batch of `size` training examples. Randomized if `rand` is `True`
 
 `getTestData()`: Returns test data matrices
+
+# Utility functions:
+
+`loadImagesFromList(imageSize=None, filenames=[])`: Loads images from a list of filenames. Resized to `imageSize` if not `None`
+
+`loadImagesFromPattern(imageSize=None, pattern="./*")`: Loads all images that match a given pattern. Resized to `imageSize` if not `None`
+
+`loadImagesFromDir(imageSize=None, directory="./")`: Loads all images from a given directory. Resized to `imageSize` if not `None`
+
+`oneHot(images, numClasses=None)`: Converts images to matrix of one-hot vectors. May be useful for ground truth values in softmax networks. `numClasses` specifies the length of each one-hot vector. If `None`, `numClasses` is estimated by using the max value.
